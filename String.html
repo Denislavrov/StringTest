@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .link {
+        color: blue;
+        border-bottom: 1px dotted;
+        margin: 0 10px 0 0;
+        cursor: pointer;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="js-class">my text</div>
+<br>
+<div>new text:</div>
+<textarea class="js-textarea"></textarea>
+<br>
+1) <span class="js-buttonToggle link">toggle text</span><br>
+2) <span class="js-buttonAdd link">add text</span><br>
+3) <span class="js-buttonRemove link">remove text</span><br>
+
+<br>
+4) <span class="js-buttonReplace link">replace text by:</span>
+<input class="js-input" />
+<br/>
+5) <span class="js-buttonReplaceAll link">replace text by:(ALL)</span>
+<input class="js-inputAll" />
+<div class="js-result">my new text: </div>
+<br/>
+<br/>
+<br/>
+<span class="js-clear link">clear All</span>
+</body>
+</html>
+<script>
+    (function () {
+        var toggler = '';
+
+        var jsClass = document.querySelector('.js-class');
+        var jsResult = document.querySelector('.js-result');
+        var jsTextarea = document.querySelector('.js-textarea');
+        var jsInput = document.querySelector('.js-input');
+        var jsInputAll = document.querySelector('.js-inputAll');
+        var resultText = document.createElement('SPAN');
+
+        jsResult.appendChild(resultText);
+        resultText.innerHTML = jsClass.textContent;
+
+        function add(spanText, inputArea) {
+            return spanText.textContent += inputArea.value;
+        }
+
+        function toggle(spanText, inputArea) {
+            if (spanText.textContent === inputArea.value) {
+                spanText.innerHTML = toggler;
+            } else {
+                toggler = spanText.textContent;
+                spanText.innerHTML = inputArea.value;
+            }
+        }
+
+        function remove(defaultText) {
+            return resultText.innerHTML = defaultText;
+        }
+
+        function replace(inputArea, input, spanText) {
+            return spanText.textContent = spanText.textContent.replace(inputArea.value, input.value);
+        }
+
+        function replaceAll(inputArea, input, str) {
+            if (input === inputArea) {
+                return str;
+            }
+            while (str.indexOf(inputArea) !== -1) {
+                str = str.replace(inputArea, input);
+            }
+            return str;
+        }
+
+
+        function addFunction() {
+            add(resultText, jsTextarea);
+        }
+        function removeFunction() {
+            remove(jsClass.textContent);
+        }
+        function replaceFunction() {
+            replace(jsTextarea, jsInput, resultText);
+        }
+        function replaceAllFunction() {
+            resultText.innerHTML = replaceAll(jsTextarea.value, jsInputAll.value, resultText.textContent);
+        }
+
+
+        document.querySelector('.js-buttonToggle').addEventListener("click", toggle.bind(this, resultText, jsTextarea));
+        document.querySelector('.js-buttonAdd').addEventListener("click", addFunction);
+        document.querySelector('.js-buttonRemove').addEventListener("click", removeFunction);
+        document.querySelector('.js-buttonReplace').addEventListener("click", replaceFunction);
+        document.querySelector('.js-buttonReplaceAll').addEventListener("click", replaceAllFunction);
+
+        document.querySelector('.js-clear').addEventListener("click", function () {
+            document.querySelector('.js-buttonToggle').removeEventListener("click", toggleFunction);
+            document.querySelector('.js-buttonAdd').removeEventListener("click", addFunction);
+            document.querySelector('.js-buttonRemove').removeEventListener("click", removeFunction);
+            document.querySelector('.js-buttonReplace').removeEventListener("click", replaceFunction);
+            document.querySelector('.js-buttonReplaceAll').removeEventListener("click", replaceAllFunction);
+        });
+    })();
+
+</script>
